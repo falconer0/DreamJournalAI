@@ -1,0 +1,14 @@
+node_modules/
+.claude
+.DS_Store
+CLAUDE.md
+*.log
+.env
+dist/
+build/
+.vscode/
+.idea/
+*.swp
+*.swo
+.cache/
+coverage/
