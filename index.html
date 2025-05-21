@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamJournalAI</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DreamJournalAI</h1>
+            <p>Record and analyze your dreams with AI assistance</p>
+        </header>
+
+        <main>
+            <section class="dream-input">
+                <h2>Record Your Dream</h2>
+                <form id="dreamForm">
+                    <div class="form-group">
+                        <label for="dreamDate">Date:</label>
+                        <input type="date" id="dreamDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dreamTitle">Title:</label>
+                        <input type="text" id="dreamTitle" placeholder="Give your dream a title..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dreamContent">Dream Description:</label>
+                        <textarea id="dreamContent" rows="6" placeholder="Describe your dream in detail..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dreamMood">Mood:</label>
+                        <select id="dreamMood">
+                            <option value="">Select mood...</option>
+                            <option value="happy">Happy</option>
+                            <option value="sad">Sad</option>
+                            <option value="scary">Scary</option>
+                            <option value="weird">Weird</option>
+                            <option value="peaceful">Peaceful</option>
+                            <option value="anxious">Anxious</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">Save Dream</button>
+                </form>
+            </section>
+
+            <section class="dream-list">
+                <h2>Your Dreams</h2>
+                <div id="dreamsList">
+                    <p class="no-dreams">No dreams recorded yet. Start by recording your first dream!</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
