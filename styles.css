@@ -122,6 +122,23 @@ button:hover {
 .dream-item .dream-content {
     color: #4a5568;
     line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.delete-btn {
+    background: #e53e3e;
+    color: white;
+    padding: 6px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #c53030;
+    transform: none;
 }
 
 .no-dreams {
