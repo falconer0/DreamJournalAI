@@ -59,6 +59,7 @@ class DreamJournal {
 
         if (this.dreams.length === 0) {
             container.innerHTML = '<p class="no-dreams">No dreams recorded yet. Start by recording your first dream!</p>';
+            this.renderAnalysis();
             return;
         }
 
@@ -74,6 +75,7 @@ class DreamJournal {
         `).join('');
 
         container.innerHTML = dreamsHTML;
+        this.renderAnalysis();
     }
 
     deleteDream(dreamId) {
@@ -91,6 +93,96 @@ class DreamJournal {
             month: 'short',
             day: 'numeric'
         });
+    }
+
+    renderAnalysis() {
+        const container = document.getElementById('analysisContent');
+
+        if (this.dreams.length === 0) {
+            container.innerHTML = '<p class="no-analysis">Record some dreams to see analysis!</p>';
+            return;
+        }
+
+        const stats = this.calculateStats();
+        const moodData = this.getMoodAnalysis();
+
+        container.innerHTML = `
+            <div class="analysis-stats">
+                <div class="stat-card">
+                    <h4>Total Dreams</h4>
+                    <div class="value">${stats.total}</div>
+                </div>
+                <div class="stat-card">
+                    <h4>This Month</h4>
+                    <div class="value">${stats.thisMonth}</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Average Length</h4>
+                    <div class="value">${stats.avgLength}</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Most Common Mood</h4>
+                    <div class="value">${stats.topMood || 'N/A'}</div>
+                </div>
+            </div>
+
+            <div class="mood-chart">
+                <h3>Mood Distribution</h3>
+                ${moodData.map(mood => `
+                    <div class="mood-item">
+                        <span>${mood.name} (${mood.count})</span>
+                        <div class="mood-bar" style="width: ${mood.percentage}%"></div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    calculateStats() {
+        const total = this.dreams.length;
+        const thisMonth = this.dreams.filter(dream => {
+            const dreamDate = new Date(dream.date);
+            const now = new Date();
+            return dreamDate.getMonth() === now.getMonth() &&
+                   dreamDate.getFullYear() === now.getFullYear();
+        }).length;
+
+        const avgLength = Math.round(
+            this.dreams.reduce((sum, dream) => sum + dream.content.length, 0) / total
+        );
+
+        const moodCounts = {};
+        this.dreams.forEach(dream => {
+            if (dream.mood) {
+                moodCounts[dream.mood] = (moodCounts[dream.mood] || 0) + 1;
+            }
+        });
+
+        const topMood = Object.keys(moodCounts).reduce((a, b) =>
+            moodCounts[a] > moodCounts[b] ? a : b, null
+        );
+
+        return { total, thisMonth, avgLength, topMood };
+    }
+
+    getMoodAnalysis() {
+        const moodCounts = {};
+        let totalWithMood = 0;
+
+        this.dreams.forEach(dream => {
+            if (dream.mood) {
+                moodCounts[dream.mood] = (moodCounts[dream.mood] || 0) + 1;
+                totalWithMood++;
+            }
+        });
+
+        return Object.entries(moodCounts)
+            .map(([mood, count]) => ({
+                name: mood,
+                count,
+                percentage: Math.round((count / totalWithMood) * 100)
+            }))
+            .sort((a, b) => b.count - a.count);
     }
 }
 

@@ -37,8 +37,23 @@ header p {
 
 main {
     display: grid;
-    gap: 30px;
+    gap: 20px;
     grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "input list"
+        "analysis analysis";
+}
+
+.dream-input {
+    grid-area: input;
+}
+
+.dream-list {
+    grid-area: list;
+}
+
+.dream-analysis {
+    grid-area: analysis;
 }
 
 section {
@@ -141,16 +156,71 @@ button:hover {
     transform: none;
 }
 
-.no-dreams {
+.no-dreams,
+.no-analysis {
     text-align: center;
     color: #a0aec0;
     font-style: italic;
     padding: 40px 20px;
 }
 
+.analysis-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #f7fafc;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.stat-card h4 {
+    color: #4a5568;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.stat-card .value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.mood-chart {
+    margin-top: 20px;
+}
+
+.mood-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.mood-item:last-child {
+    border-bottom: none;
+}
+
+.mood-bar {
+    height: 20px;
+    background: #667eea;
+    border-radius: 10px;
+    min-width: 20px;
+}
+
 @media (max-width: 768px) {
     main {
         grid-template-columns: 1fr;
+        grid-template-areas:
+            "input"
+            "list"
+            "analysis";
     }
 
     .container {
@@ -159,5 +229,9 @@ button:hover {
 
     header h1 {
         font-size: 2em;
+    }
+
+    .analysis-stats {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
 }
