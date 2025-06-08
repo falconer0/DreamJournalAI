@@ -23,6 +23,12 @@ class DreamJournal {
     initializeEventListeners() {
         const form = document.getElementById('dreamForm');
         form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+        const exportJsonBtn = document.getElementById('exportJson');
+        const exportCsvBtn = document.getElementById('exportCsv');
+
+        exportJsonBtn.addEventListener('click', () => this.exportJson());
+        exportCsvBtn.addEventListener('click', () => this.exportCsv());
     }
 
     handleSubmit(e) {
@@ -183,6 +189,57 @@ class DreamJournal {
                 percentage: Math.round((count / totalWithMood) * 100)
             }))
             .sort((a, b) => b.count - a.count);
+    }
+
+    exportJson() {
+        if (this.dreams.length === 0) {
+            alert('No dreams to export!');
+            return;
+        }
+
+        const data = {
+            exportDate: new Date().toISOString(),
+            dreams: this.dreams
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: 'application/json'
+        });
+
+        this.downloadFile(blob, 'dreams-export.json');
+    }
+
+    exportCsv() {
+        if (this.dreams.length === 0) {
+            alert('No dreams to export!');
+            return;
+        }
+
+        const headers = ['Date', 'Title', 'Content', 'Mood', 'Created At'];
+        const csvData = [
+            headers.join(','),
+            ...this.dreams.map(dream => [
+                dream.date,
+                `"${dream.title.replace(/"/g, '""')}"`,
+                `"${dream.content.replace(/"/g, '""')}"`,
+                dream.mood || '',
+                dream.createdAt
+            ].join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvData], { type: 'text/csv' });
+        this.downloadFile(blob, 'dreams-export.csv');
+    }
+
+    downloadFile(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 }
 
