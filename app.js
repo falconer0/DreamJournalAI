@@ -29,6 +29,12 @@ class DreamJournal {
 
         exportJsonBtn.addEventListener('click', () => this.exportJson());
         exportCsvBtn.addEventListener('click', () => this.exportCsv());
+
+        const searchInput = document.getElementById('searchInput');
+        const moodFilter = document.getElementById('moodFilter');
+
+        searchInput.addEventListener('input', () => this.filterDreams());
+        moodFilter.addEventListener('change', () => this.filterDreams());
     }
 
     handleSubmit(e) {
@@ -60,8 +66,9 @@ class DreamJournal {
         this.setDefaultDate();
     }
 
-    renderDreams() {
+    renderDreams(filteredDreams = null) {
         const container = document.getElementById('dreamsList');
+        const dreamsToShow = filteredDreams || this.dreams;
 
         if (this.dreams.length === 0) {
             container.innerHTML = '<p class="no-dreams">No dreams recorded yet. Start by recording your first dream!</p>';
@@ -69,7 +76,12 @@ class DreamJournal {
             return;
         }
 
-        const dreamsHTML = this.dreams.map(dream => `
+        if (dreamsToShow.length === 0) {
+            container.innerHTML = '<p class="no-dreams">No dreams match your search criteria.</p>';
+            return;
+        }
+
+        const dreamsHTML = dreamsToShow.map(dream => `
             <div class="dream-item" data-id="${dream.id}">
                 <h3>${dream.title}</h3>
                 <div class="dream-meta">
@@ -81,13 +93,35 @@ class DreamJournal {
         `).join('');
 
         container.innerHTML = dreamsHTML;
-        this.renderAnalysis();
+
+        if (!filteredDreams) {
+            this.renderAnalysis();
+        }
+    }
+
+    filterDreams() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const moodFilter = document.getElementById('moodFilter').value;
+
+        const filtered = this.dreams.filter(dream => {
+            const matchesSearch = dream.title.toLowerCase().includes(searchTerm) ||
+                                dream.content.toLowerCase().includes(searchTerm);
+            const matchesMood = !moodFilter || dream.mood === moodFilter;
+
+            return matchesSearch && matchesMood;
+        });
+
+        this.renderDreams(filtered);
     }
 
     deleteDream(dreamId) {
         if (confirm('Are you sure you want to delete this dream?')) {
             this.dreams = this.dreams.filter(dream => dream.id !== dreamId);
             this.saveDreams();
+
+            // Clear filters and re-render
+            document.getElementById('searchInput').value = '';
+            document.getElementById('moodFilter').value = '';
             this.renderDreams();
         }
     }

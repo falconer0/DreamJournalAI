@@ -110,6 +110,37 @@ section h2 {
     cursor: not-allowed;
 }
 
+.filter-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.search-input,
+.mood-filter {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.search-input {
+    flex: 1;
+}
+
+.search-input:focus,
+.mood-filter:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.mood-filter {
+    min-width: 120px;
+}
+
 .form-group {
     margin-bottom: 20px;
 }
@@ -161,6 +192,24 @@ button:hover {
     margin-bottom: 15px;
     border-radius: 10px;
     border-left: 4px solid #667eea;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.dream-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .dream-item h3 {
